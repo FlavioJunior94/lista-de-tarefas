@@ -2,7 +2,7 @@
 
 Este é um aplicativo simples de lista de tarefas desenvolvido utilizando HTML, CSS e JavaScript. Ele permite que você gerencie suas tarefas diárias, marcando-as como concluídas, removendo tarefas e visualizando o progresso geral através de um gráfico de barras.
 
-![Screenshot](screenshot.png)
+![Screenshot](assets/images/screen.jpg)
 
 ## Funcionalidades
 
