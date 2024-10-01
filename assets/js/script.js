@@ -7,14 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
   let tasks = [];
 
-  // Verificar se há tarefas salvas no localStorage
   if (localStorage.getItem('tasks')) {
     tasks = JSON.parse(localStorage.getItem('tasks'));
     updateTasks();
     updateProgress();
   }
 
-  // Event listener para adicionar tarefa
   taskForm.addEventListener('submit', function(event) {
     event.preventDefault();
     const taskText = taskInput.value.trim();
@@ -24,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Função para adicionar tarefa à lista
   function addTask(taskText) {
     const task = {
       id: Date.now(),
@@ -38,12 +35,10 @@ document.addEventListener('DOMContentLoaded', function() {
     updateProgress();
   }
 
-  // Função para salvar tarefas no localStorage
   function saveTasks() {
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }
 
-  // Função para atualizar a lista de tarefas no HTML
   function updateTasks() {
     taskList.innerHTML = '';
     tasks.forEach(task => {
@@ -71,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Função para deletar uma tarefa da lista
   function deleteTask(id) {
     tasks = tasks.filter(task => task.id !== id);
     saveTasks();
@@ -79,7 +73,6 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTasks();
   }
 
-  // Função para atualizar o gráfico de progresso
   function updateProgress() {
     const completedTasks = tasks.filter(task => task.completed).length;
     const totalTasks = tasks.length;

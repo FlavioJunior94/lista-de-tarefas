@@ -10,6 +10,7 @@ Este é um aplicativo simples de lista de tarefas desenvolvido utilizando HTML, 
 - Marcar tarefas como concluídas.
 - Excluir tarefas da lista.
 - Visualizar a porcentagem de tarefas concluídas através de um gráfico de barra.
+- Salva seus dados via localStorage
 
 ## Tecnologias Utilizadas
 
@@ -37,4 +38,4 @@ Este é um aplicativo simples de lista de tarefas desenvolvido utilizando HTML, 
 
 ## Como Instalar e Executar
 
-1. Clone este repositório:
+1. Acesse:  https://flaviojunior94.github.io/lista-de-tarefas/

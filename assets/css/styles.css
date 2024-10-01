@@ -83,3 +83,24 @@ li.completed {
   transform: translate(-50%, -50%);
   color: #333;
 }
+
+footer{
+  color: rgb(11, 11, 11);
+  text-align: right;
+  font-size: 0.9em;
+  padding-top: 50px;
+  margin-right: 24px;
+}
+footer > a{
+  background-color: darkgreen;
+  font-size: 1em;
+  color: white;
+  text-decoration: none;
+  padding: 5px;
+  border-radius: 20px;
+  transition-duration: 0.1s;
+}
+footer>a:hover{
+  color: black;
+  background-color: green;
+}
