@@ -36,6 +36,6 @@ Este é um aplicativo simples de lista de tarefas desenvolvido utilizando HTML, 
    - Uma barra de progresso exibe a porcentagem de tarefas concluídas em relação ao total de tarefas na lista.
    - A porcentagem é atualizada dinamicamente conforme você marca tarefas como concluídas ou as remove da lista.
 
-## Como Instalar e Executar
+## Acessar:
 
 1. Acesse:  https://flaviojunior94.github.io/lista-de-tarefas/
