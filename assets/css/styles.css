@@ -1,7 +1,7 @@
-/* Modernização do design geral */
+/* Modernização do design geral - Paleta fria */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #245f70 0%, #4e5f6c 50%, #959f9d 100%);
   margin: 0;
   padding: 20px;
   min-height: 100vh;
