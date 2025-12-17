@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const progressLabel = document.getElementById('progress-label');
 
   let tasks = [];
+  let editingTaskId = null; // Variável para controlar qual tarefa está sendo editada
 
   if (localStorage.getItem('tasks')) {
     tasks = JSON.parse(localStorage.getItem('tasks'));
@@ -39,29 +40,51 @@ document.addEventListener('DOMContentLoaded', function() {
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }
 
+  // Função atualizada para renderizar tarefas com novos botões
   function updateTasks() {
     taskList.innerHTML = '';
-    tasks.forEach(task => {
+    tasks.forEach((task, index) => {
       const li = document.createElement('li');
-      li.innerHTML = `
-        <span>${task.text}</span>
-        <div>
-          <input type="checkbox" id="task-${task.id}" ${task.completed ? 'checked' : ''}>
-          <button class="delete-btn">X</button>
-        </div>
-      `;
+      
+      // Verifica se esta tarefa está sendo editada
+      if (editingTaskId === task.id) {
+        li.innerHTML = `
+          <div class="task-text">
+            <input type="checkbox" id="task-${task.id}" ${task.completed ? 'checked' : ''}>
+            <input type="text" class="edit-input" value="${task.text}" id="edit-input-${task.id}">
+            <div class="edit-actions">
+              <button class="action-btn save-btn" onclick="saveEdit(${task.id})"><i class="fas fa-check"></i></button>
+              <button class="action-btn cancel-btn" onclick="cancelEdit()"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+        `;
+      } else {
+        li.innerHTML = `
+          <div class="task-text">
+            <input type="checkbox" id="task-${task.id}" ${task.completed ? 'checked' : ''}>
+            <div class="task-content">${task.text}</div>
+          </div>
+          <div class="task-actions">
+            <button class="action-btn edit-btn" onclick="editTask(${task.id})" title="Editar tarefa"><i class="fas fa-edit"></i></button>
+            <button class="action-btn duplicate-btn" onclick="duplicateTask(${task.id})" title="Duplicar tarefa"><i class="fas fa-copy"></i></button>
+            <button class="action-btn move-up-btn" onclick="moveTask(${index}, -1)" title="Mover para cima" ${index === 0 ? 'disabled' : ''}><i class="fas fa-arrow-up"></i></button>
+            <button class="action-btn move-down-btn" onclick="moveTask(${index}, 1)" title="Mover para baixo" ${index === tasks.length - 1 ? 'disabled' : ''}><i class="fas fa-arrow-down"></i></button>
+            <button class="action-btn delete-btn" onclick="deleteTask(${task.id})" title="Excluir tarefa"><i class="fas fa-trash"></i></button>
+          </div>
+        `;
+      }
+      
       li.className = task.completed ? 'completed' : '';
-      const checkbox = li.querySelector('input');
+      
+      // Event listener para checkbox
+      const checkbox = li.querySelector('input[type="checkbox"]');
       checkbox.addEventListener('change', function() {
         task.completed = this.checked;
         saveTasks();
         updateProgress();
         updateTasks();
       });
-      const deleteBtn = li.querySelector('.delete-btn');
-      deleteBtn.addEventListener('click', function() {
-        deleteTask(task.id);
-      });
+      
       taskList.appendChild(li);
     });
   }
@@ -73,11 +96,111 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTasks();
   }
 
+  // Nova função para editar tarefa
+  window.editTask = function(id) {
+    editingTaskId = id;
+    updateTasks();
+    // Foca no campo de edição
+    setTimeout(() => {
+      const editInput = document.getElementById(`edit-input-${id}`);
+      if (editInput) {
+        editInput.focus();
+        editInput.select();
+      }
+    }, 100);
+  };
+
+  // Nova função para salvar edição
+  window.saveEdit = function(id) {
+    const editInput = document.getElementById(`edit-input-${id}`);
+    const newText = editInput.value.trim();
+    
+    if (newText !== '') {
+      const task = tasks.find(t => t.id === id);
+      if (task) {
+        task.text = newText;
+        saveTasks();
+      }
+    }
+    
+    editingTaskId = null;
+    updateTasks();
+  };
+
+  // Nova função para cancelar edição
+  window.cancelEdit = function() {
+    editingTaskId = null;
+    updateTasks();
+  };
+
+  // Nova função para duplicar tarefa
+  window.duplicateTask = function(id) {
+    const task = tasks.find(t => t.id === id);
+    if (task) {
+      const duplicatedTask = {
+        id: Date.now(),
+        text: task.text + ' (cópia)',
+        completed: false
+      };
+      tasks.push(duplicatedTask);
+      saveTasks();
+      updateTasks();
+      updateProgress();
+    }
+  };
+
+  // Nova função para mover tarefa
+  window.moveTask = function(currentIndex, direction) {
+    const newIndex = currentIndex + direction;
+    
+    if (newIndex >= 0 && newIndex < tasks.length) {
+      // Troca as posições
+      [tasks[currentIndex], tasks[newIndex]] = [tasks[newIndex], tasks[currentIndex]];
+      saveTasks();
+      updateTasks();
+    }
+  };
+
+  // Atualiza a função deleteTask para usar window
+  window.deleteTask = function(id) {
+    tasks = tasks.filter(task => task.id !== id);
+    saveTasks();
+    updateProgress();
+    updateTasks();
+  };
+
+  // Event listener para Enter no campo de edição
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && editingTaskId) {
+      saveEdit(editingTaskId);
+    } else if (e.key === 'Escape' && editingTaskId) {
+      cancelEdit();
+    }
+  });
+
+  // Função atualizada para mudar cor da barra de progresso
   function updateProgress() {
     const completedTasks = tasks.filter(task => task.completed).length;
     const totalTasks = tasks.length;
     const percentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+    
     progressBar.style.width = `${percentage}%`;
-    progressLabel.textContent = `${percentage.toFixed(2)}%`;
+    progressLabel.textContent = `${Math.round(percentage)}%`;
+    
+    // Remove todas as classes de cor
+    progressBar.classList.remove('red', 'orange', 'yellow', 'blue', 'green');
+    
+    // Adiciona a classe de cor baseada na porcentagem
+    if (percentage >= 0 && percentage < 20) {
+      progressBar.classList.add('red');
+    } else if (percentage >= 20 && percentage < 40) {
+      progressBar.classList.add('orange');
+    } else if (percentage >= 40 && percentage < 60) {
+      progressBar.classList.add('yellow');
+    } else if (percentage >= 60 && percentage < 80) {
+      progressBar.classList.add('blue');
+    } else if (percentage >= 80) {
+      progressBar.classList.add('green');
+    }
   }
 });
