@@ -42,7 +42,7 @@ Este é um aplicativo simples de lista de tarefas desenvolvido utilizando HTML, 
 
 ## VERSÃO 2.0
 
-![Screenshot](assets/images/screen2.jpg)
+![Screenshot](assets/images/screenV2.0.jpg)
 
 ### 🚀 Principais Melhorias Implementadas
 
