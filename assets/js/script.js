@@ -65,11 +65,14 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="task-content">${task.text}</div>
           </div>
           <div class="task-actions">
-            <button class="action-btn edit-btn" onclick="editTask(${task.id})" title="Editar tarefa"><i class="fas fa-edit"></i></button>
-            <button class="action-btn duplicate-btn" onclick="duplicateTask(${task.id})" title="Duplicar tarefa"><i class="fas fa-copy"></i></button>
-            <button class="action-btn move-up-btn" onclick="moveTask(${index}, -1)" title="Mover para cima" ${index === 0 ? 'disabled' : ''}><i class="fas fa-arrow-up"></i></button>
-            <button class="action-btn move-down-btn" onclick="moveTask(${index}, 1)" title="Mover para baixo" ${index === tasks.length - 1 ? 'disabled' : ''}><i class="fas fa-arrow-down"></i></button>
-            <button class="action-btn delete-btn" onclick="deleteTask(${task.id})" title="Excluir tarefa"><i class="fas fa-trash"></i></button>
+            <button class="action-btn menu-btn" onclick="toggleMenu(${task.id})" title="Opções"><i class="fas fa-ellipsis-v"></i></button>
+            <div class="actions-menu" id="menu-${task.id}" style="display: none;">
+              <button class="action-btn edit-btn" onclick="editTask(${task.id})" title="Editar tarefa"><i class="fas fa-edit"></i></button>
+              <button class="action-btn duplicate-btn" onclick="duplicateTask(${task.id})" title="Duplicar tarefa"><i class="fas fa-copy"></i></button>
+              <button class="action-btn move-up-btn" onclick="moveTask(${index}, -1)" title="Mover para cima" ${index === 0 ? 'disabled' : ''}><i class="fas fa-arrow-up"></i></button>
+              <button class="action-btn move-down-btn" onclick="moveTask(${index}, 1)" title="Mover para baixo" ${index === tasks.length - 1 ? 'disabled' : ''}><i class="fas fa-arrow-down"></i></button>
+              <button class="action-btn delete-btn" onclick="deleteTask(${task.id})" title="Excluir tarefa"><i class="fas fa-trash"></i></button>
+            </div>
           </div>
         `;
       }
@@ -133,13 +136,13 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTasks();
   };
 
-  // Nova função para duplicar tarefa
+  // Nova função para duplicar tarefa - sem adicionar (cópia)
   window.duplicateTask = function(id) {
     const task = tasks.find(t => t.id === id);
     if (task) {
       const duplicatedTask = {
         id: Date.now(),
-        text: task.text + ' (cópia)',
+        text: task.text,
         completed: false
       };
       tasks.push(duplicatedTask);
@@ -169,12 +172,33 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTasks();
   };
 
+  // Nova função para toggle do menu de ações
+  window.toggleMenu = function(id) {
+    const menu = document.getElementById(`menu-${id}`);
+    const isVisible = menu.style.display !== 'none';
+    
+    // Fecha todos os menus
+    document.querySelectorAll('.actions-menu').forEach(m => m.style.display = 'none');
+    
+    // Abre o menu clicado se estava fechado
+    if (!isVisible) {
+      menu.style.display = 'flex';
+    }
+  };
+
   // Event listener para Enter no campo de edição
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && editingTaskId) {
       saveEdit(editingTaskId);
     } else if (e.key === 'Escape' && editingTaskId) {
       cancelEdit();
+    }
+  });
+
+  // Fecha menus ao clicar fora
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.task-actions')) {
+      document.querySelectorAll('.actions-menu').forEach(m => m.style.display = 'none');
     }
   });
 

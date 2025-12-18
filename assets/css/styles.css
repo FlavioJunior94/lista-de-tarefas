@@ -45,6 +45,14 @@ h1::after {
   border-radius: 2px;
 }
 
+/* Responsividade para celular - título menor */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+}
+
 form {
   display: flex;
   margin-bottom: 10px;
@@ -63,6 +71,20 @@ form button {
   border: none;
   cursor: pointer;
   font-size: 16px;
+}
+
+/* Responsividade para celular - botão ADD */
+@media (max-width: 768px) {
+  form button {
+    padding: 8px 12px;
+    font-size: 0;
+  }
+  
+  form button::after {
+    content: '+';
+    font-size: 18px;
+    font-weight: bold;
+  }
 }
 
 form button:hover {
@@ -247,6 +269,83 @@ li.completed {
 
 .cancel-btn:hover {
   background-color: rgba(244, 67, 54, 0.2);
+}
+
+/* Menu de ações para mobile */
+.menu-btn {
+  color: #666;
+  background-color: rgba(102, 102, 102, 0.1);
+}
+
+.menu-btn:hover {
+  background-color: rgba(102, 102, 102, 0.2);
+  transform: scale(1.1);
+}
+
+.actions-menu {
+  position: absolute;
+  right: 0;
+  top: 40px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 8px;
+  gap: 4px;
+  z-index: 10;
+}
+
+/* Responsividade para celular */
+@media (max-width: 768px) {
+  .task-actions {
+    position: relative;
+  }
+  
+  .task-actions > .action-btn:not(.menu-btn) {
+    display: none;
+  }
+  
+  .actions-menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    right: 0;
+    top: 35px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 8px;
+    gap: 4px;
+    z-index: 10;
+    min-width: 120px;
+  }
+  
+  .actions-menu .action-btn {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 8px 12px;
+    border-radius: 4px;
+    gap: 8px;
+  }
+  
+  .actions-menu .action-btn i {
+    width: 16px;
+  }
+}
+
+/* Desktop - mostra todos os botões normalmente */
+@media (min-width: 769px) {
+  .menu-btn {
+    display: none;
+  }
+  
+  .actions-menu {
+    display: flex !important;
+    position: static;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    flex-direction: row;
+  }
 }
 
 footer{
